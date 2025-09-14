@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ethers } from 'ethers'
 import Image from 'next/image'
 
@@ -13,19 +13,26 @@ export default function MintAIArt() {
   const [isMinting, setIsMinting] = useState(false)
   const [status, setStatus] = useState('')
   const [walletAddress, setWalletAddress] = useState('')
+  const [isEthereumAvailable, setIsEthereumAvailable] = useState(false)
+
+  useEffect(() => {
+    // Check if Ethereum is available
+    setIsEthereumAvailable(typeof window !== 'undefined' && typeof window.ethereum !== 'undefined')
+  }, [])
 
   const connectWallet = async () => {
-    if (typeof window.ethereum !== 'undefined') {
-      try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-        setWalletAddress(accounts[0])
-        setStatus('Wallet connected successfully!')
-      } catch (error) {
-        setStatus('Failed to connect wallet')
-        console.error(error)
-      }
-    } else {
+    if (!isEthereumAvailable) {
       setStatus('Please install MetaMask!')
+      return
+    }
+
+    try {
+      const accounts = await window.ethereum!.request({ method: 'eth_requestAccounts' })
+      setWalletAddress(accounts[0])
+      setStatus('Wallet connected successfully!')
+    } catch (error) {
+      setStatus('Failed to connect wallet')
+      console.error(error)
     }
   }
 
@@ -74,6 +81,11 @@ export default function MintAIArt() {
       return
     }
 
+    if (!isEthereumAvailable) {
+      setStatus('Please install MetaMask!')
+      return
+    }
+
     setIsMinting(true)
     setStatus('Minting NFT...')
 
@@ -97,8 +109,8 @@ export default function MintAIArt() {
         throw new Error(metadataData.error || 'Failed to store metadata')
       }
 
-      // Now mint the NFT
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
+      // Now mint the NFT with proper null check
+      const provider = new ethers.providers.Web3Provider(window.ethereum!)
       const signer = provider.getSigner()
 
       // This would be the contract ABI - you'll need to import it
@@ -112,8 +124,8 @@ export default function MintAIArt() {
       await tx.wait()
 
       setStatus(`NFT minted successfully! Transaction: ${tx.hash}`)
-    } catch (error) {
-      setStatus('Failed to mint NFT')
+    } catch (error: any) {
+      setStatus('Failed to mint NFT: ' + (error.message || 'Unknown error'))
       console.error(error)
     } finally {
       setIsMinting(false)
@@ -126,9 +138,14 @@ export default function MintAIArt() {
         <button
           onClick={connectWallet}
           className="btn w-full mb-4"
-          disabled={!!walletAddress}
+          disabled={!!walletAddress || !isEthereumAvailable}
         >
-          {walletAddress ? `Connected: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : 'Connect Wallet'}
+          {walletAddress 
+            ? `Connected: ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` 
+            : isEthereumAvailable 
+              ? 'Connect Wallet' 
+              : 'Install MetaMask'
+          }
         </button>
       </div>
 
