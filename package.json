@@ -1,0 +1,22 @@
+{
+  "name": "ai-nft-minter",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "yarn workspace nextjs dev",
+    "build": "yarn workspace nextjs build",
+    "start": "yarn workspace nextjs start",
+    "lint": "yarn workspace nextjs lint",
+    "hardhat:compile": "yarn workspace hardhat build",
+    "hardhat:deploy": "yarn workspace hardhat deploy --network sepolia",
+    "install:all": "yarn install"
+  },
+  "devDependencies": {
+    "dotenv": "^17.2.2",
+    "typescript": "^5.0.0"
+  },
+  "packageManager": "yarn@1.22.19"
+}
