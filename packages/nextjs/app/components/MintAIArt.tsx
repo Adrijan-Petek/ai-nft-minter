@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { ethers } from 'ethers'
+import { ethers } from 'ethers' // ethers v6
 import Image from 'next/image'
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "0xYourDeployedContractAddressHere"
@@ -16,7 +16,6 @@ export default function MintAIArt() {
   const [isEthereumAvailable, setIsEthereumAvailable] = useState(false)
 
   useEffect(() => {
-    // Check if Ethereum is available
     setIsEthereumAvailable(typeof window !== 'undefined' && typeof window.ethereum !== 'undefined')
   }, [])
 
@@ -109,11 +108,16 @@ export default function MintAIArt() {
         throw new Error(metadataData.error || 'Failed to store metadata')
       }
 
-      // Now mint the NFT with proper null check
-      const provider = new ethers.providers.Web3Provider(window.ethereum!)
-      const signer = provider.getSigner()
+      // Ethers v6 syntax - different from v5
+      if (!window.ethereum) {
+        throw new Error('MetaMask not installed');
+      }
+      
+      // Ethers v6: Use BrowserProvider instead of providers.Web3Provider
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
 
-      // This would be the contract ABI - you'll need to import it
+      // Contract ABI
       const contractABI = [
         "function mintNFT(address to, string memory uri) public returns (uint256)"
       ]
