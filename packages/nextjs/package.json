@@ -11,11 +11,11 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.9.0",
-    "ethers": "^6.8.0",  // Changed from 5.7.2 to 6.8.0
+    "ethers": "^6.8.0",
     "next": "^14.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "wagmi": "^2.0.0",   // Wagmi v2 works with ethers v6
+    "wagmi": "^2.0.0",
     "tailwindcss": "^3.3.0",
     "autoprefixer": "^10.4.0",
     "postcss": "^8.4.0",
@@ -23,7 +23,7 @@
     "@heroicons/react": "^2.0.0",
     "openai": "^4.0.0",
     "axios": "^1.6.0",
-    "viem": "^1.0.0"     // Added viem for wagmi v2 compatibility
+    "viem": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
