@@ -2,34 +2,40 @@ name: Deploy to Vercel
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: ./packages/nextjs
+    
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
-
+      uses: actions/checkout@v3
+      
     - name: Setup Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v3
       with:
         node-version: '20'
         cache: 'yarn'
-
+        cache-dependency-path: './packages/nextjs/yarn.lock'
+        
     - name: Install dependencies
       run: yarn install
-
-    - name: Build Next.js app
-      run: yarn workspace nextjs build
-
+      
+    - name: Build project
+      run: yarn build
+      
+    - name: Install Vercel CLI
+      run: npm install --global vercel@latest
+      
+    - name: Pull Vercel environment information
+      run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      
+    - name: Build project with Vercel
+      run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+      
     - name: Deploy to Vercel
-      uses: amondnet/vercel-action@v25
-      with:
-        vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-        working-directory: ./packages/nextjs
+      run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
