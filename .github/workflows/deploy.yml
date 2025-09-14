@@ -1,29 +1,36 @@
-name: Deploy to Vercel
-
-on:
-  push:
-    branches: [main]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '20'
-        
-    - name: Install dependencies
-      run: cd packages/nextjs && yarn install
-      
-    - name: Build project
-      run: cd packages/nextjs && yarn build
-      
-    - name: Deploy to Vercel (non-interactive)
-      run: |
-        cd packages/nextjs
-        npx vercel --yes --prod --token=${{ secrets.VERCEL_TOKEN }}
+{
+  "name": "nextjs",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.0",
+    "ethers": "^6.8.0",
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "wagmi": "^2.0.0",
+    "tailwindcss": "^3.3.0",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "@headlessui/react": "^1.7.0",
+    "@heroicons/react": "^2.0.0",
+    "openai": "^4.0.0",
+    "axios": "^1.6.0",
+    "viem": "^2.0.0"  // Changed from ^1.0.0 to ^2.0.0
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^8.0.0",
+    "eslint-config-next": "^14.0.0",
+    "typescript": "^5.0.0"
+  }
+}
