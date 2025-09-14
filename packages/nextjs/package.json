@@ -23,7 +23,7 @@
     "@heroicons/react": "^2.0.0",
     "openai": "^4.0.0",
     "axios": "^1.6.0",
-    "viem": "^2.0.0"  // Changed from ^1.0.0 to ^2.0.0
+    "viem": "^2.0.0"  // CHANGED FROM ^1.0.0 to ^2.0.0
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
